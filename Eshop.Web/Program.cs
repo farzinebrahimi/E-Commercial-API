@@ -6,6 +6,9 @@ DotNetEnv.Env.Load();
 var builder = WebApplication.CreateBuilder(args);
 
 var apiKey = Environment.GetEnvironmentVariable("API_KEY");
+var baseUrl = Environment.GetEnvironmentVariable("BASE_URL");
+var sender = Environment.GetEnvironmentVariable("SENDER");
+var otpPatternCode = Environment.GetEnvironmentVariable("OTPPATTERNCODE");
 //Db Configuration
 builder.Services.AddDbContext<ApplicationDbContext>(opt =>
 {
