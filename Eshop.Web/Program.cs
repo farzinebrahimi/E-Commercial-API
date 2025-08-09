@@ -1,8 +1,11 @@
 using Eshop.Data.Context;
 using Microsoft.EntityFrameworkCore;
 
+DotNetEnv.Env.Load();
+
 var builder = WebApplication.CreateBuilder(args);
 
+var apiKey = Environment.GetEnvironmentVariable("API_KEY");
 //Db Configuration
 builder.Services.AddDbContext<ApplicationDbContext>(opt =>
 {

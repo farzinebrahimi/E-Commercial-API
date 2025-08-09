@@ -6,7 +6,7 @@ public interface IUserService : IAsyncDisposable
 {
     #region Register & Login
 
-    Task<RegisterOrLoginStatus> RegisterOrLoginUser(RegisterUserDTO dto);
+    Task RegisterOrLoginUser(RegisterUserDTO dto);
     Task<bool> CheckUserExistsMobile(string mobile);
     Task<EditUserInfoDTO> GetEditUserInfo(long userId);
     
