@@ -13,8 +13,3 @@ public class RegisterUserDTO
     public string? ReturnUrl { get; set; }
 }
 
-public enum RegisterOrLoginStatus
-{
-    Susccess,
-    RedirectToSendActivationNumber,
-}

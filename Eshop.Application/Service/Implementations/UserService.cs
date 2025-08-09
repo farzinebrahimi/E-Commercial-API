@@ -4,75 +4,77 @@ using Eshop.Data.Entities.Account;
 using Eshop.Data.Repository;
 using Microsoft.EntityFrameworkCore;
 
-namespace Eshop.Application.Service.Implementations;
-
-public class UserService : IUserService
+namespace Eshop.Application.Service.Implementations
 {
-  #region CTOR
-
-  private readonly IGenericRepository<User> _userRepository;
-
-  public UserService(IGenericRepository<User> userRepository)
+  
+  public class UserService : IUserService
   {
-    _userRepository = userRepository;
-  }
+    #region CTOR
 
-  public async ValueTask DisposeAsync()
-  {
-    await _userRepository.DisposeAsync();
-  }
+    private readonly IGenericRepository<User> _userRepository;
 
-  #endregion
-
-  #region Register Method
-
-  public async Task<RegisterOrLoginStatus> RegisterOrLoginUser(RegisterUserDTO dto)
-  {
-    var checkUser = await CheckUserExistsMobile(dto.MobileNumber);
-    if (checkUser)
+    public UserService(IGenericRepository<User> userRepository)
     {
-      var user = await _userRepository.GetQuery().FirstAsync(u => u.MobileNumber == dto.MobileNumber);
-      user.MobileActivationNumber = new Random().Next(10000, 99999).ToString();
-      _userRepository.UpdateEntity(user);
-
-      await _userRepository.SaveChangesAsync();
-      return RegisterOrLoginStatus.RedirectToSendActivationNumber;
+      _userRepository = userRepository;
     }
 
-    var newUser = new User
+    public async ValueTask DisposeAsync()
     {
-      MobileNumber = dto.MobileNumber,
-      MobileActivationNumber = new Random().Next(10000, 99999).ToString()
-    };
-    await _userRepository.AddEntity(newUser);
-    await _userRepository.SaveChangesAsync();
-    return RegisterOrLoginStatus.Susccess;
-  }
+      await _userRepository.DisposeAsync();
+    }
 
-  public async Task<bool> CheckUserExistsMobile(string mobile)
-  {
-    return await _userRepository.GetQuery().AnyAsync(u => u.MobileNumber == mobile);
-  }
+    #endregion
 
-  public async Task<EditUserInfoDTO> GetEditUserInfo(long userId)
-  {
-    throw new NotImplementedException();
-  }
+    #region Register Method
 
-  public async Task EditUserDetails(EditUserInfoDTO dto)
-  {
-    throw new NotImplementedException();
-  }
+    public async Task RegisterOrLoginUser(RegisterUserDTO dto)
+    {
+      var checkUser = await CheckUserExistsMobile(dto.MobileNumber);
+      if (checkUser)
+      {
+        var user = await _userRepository.GetQuery().FirstAsync(u => u.MobileNumber == dto.MobileNumber);
+        user.MobileActivationNumber = new Random().Next(10000, 99999).ToString();
+        _userRepository.UpdateEntity(user);
 
-  public async Task<UserDetailDTO> GetUserDetails(long userId)
-  {
-    throw new NotImplementedException();
-  }
+        await _userRepository.SaveChangesAsync();
+      }
+      else
+      {
+        var newUser = new User
+        {
+          MobileNumber = dto.MobileNumber,
+          MobileActivationNumber = new Random().Next(10000, 99999).ToString()
+        };
+        await _userRepository.AddEntity(newUser);
+        await _userRepository.SaveChangesAsync();
+      }
+    }
 
-  public async Task<bool> SendActivationSms(string mobile)
-  {
-    throw new NotImplementedException();
-  }
+    public async Task<bool> CheckUserExistsMobile(string mobile)
+    {
+      return await _userRepository.GetQuery().AnyAsync(u => u.MobileNumber == mobile);
+    }
 
-  #endregion
+    public async Task<EditUserInfoDTO> GetEditUserInfo(long userId)
+    {
+      throw new NotImplementedException();
+    }
+
+    public async Task EditUserDetails(EditUserInfoDTO dto)
+    {
+      throw new NotImplementedException();
+    }
+
+    public async Task<UserDetailDTO> GetUserDetails(long userId)
+    {
+      throw new NotImplementedException();
+    }
+
+    public async Task<bool> SendActivationSms(string mobile)
+    {
+      throw new NotImplementedException();
+    }
+
+    #endregion
+  }
 }
