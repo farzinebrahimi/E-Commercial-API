@@ -67,6 +67,7 @@ namespace Eshop.Application.Service.Implementations
       var user = await _userRepository.GetByIdAsync(userId);
       return new EditUserInfoDTO
       {
+        userId = user.Id,
         Address = user.Address,
         Email = user.Email,
         FullName = user.FullName,
@@ -76,12 +77,33 @@ namespace Eshop.Application.Service.Implementations
 
     public async Task EditUserDetails(EditUserInfoDTO dto)
     {
-      throw new NotImplementedException();
+      var user = await _userRepository.GetByIdAsync(dto.userId);
+      
+      user.Address = dto.Address;
+      user.Email = dto.Email;
+      user.FullName = dto.FullName;
+      user.PostCode = dto.PostCode;
+      
+      _userRepository.UpdateEntity(user);
+      await _userRepository.SaveChangesAsync();
     }
 
     public async Task<UserDetailDTO> GetUserDetails(long userId)
     {
-      throw new NotImplementedException();
+      var user = await _userRepository.GetByIdAsync(userId);
+      return new UserDetailDTO
+      {
+        Id = userId,
+        Address = user.Address,
+        Email = user.Email,
+        FullName = user.FullName,
+        PostCode = user.PostCode,
+        MobileNumber = user.MobileNumber,
+        CreateDate = user.CreateDate,
+        LastUpdateDate = user.LastUpdateDate,
+        IsDeleted = user.IsDeleted,
+        MobileActivationNumber = user.MobileActivationNumber
+      };
     }
 
     public async Task<bool> SendActivationSms(string mobile)

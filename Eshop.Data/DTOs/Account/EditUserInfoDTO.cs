@@ -3,7 +3,9 @@
 namespace Eshop.Data.DTOs.Account;
 
 public class EditUserInfoDTO
-{   
+{
+    public long userId { get; set; }
+    
     [Display(Name = "نام و نام  خانوادگی")]
     [Required(ErrorMessage = "{0} is required")]
     [MaxLength(5, ErrorMessage = "نمی تواند بیشتر از {۱} کاراکتر باشد {۰}")]
