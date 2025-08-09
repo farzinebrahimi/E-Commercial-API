@@ -6,12 +6,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Eshop.Application.Service.Implementations
 {
-  
   public class UserService : IUserService
   {
     #region CTOR
 
     private readonly IGenericRepository<User> _userRepository;
+    private readonly ISmsService _smsService;
+
+    public UserService(IGenericRepository<User> userRepository, ISmsService smsService)
+    {
+      _userRepository = userRepository;
+      _smsService = smsService;
+    }
 
     public UserService(IGenericRepository<User> userRepository)
     {
@@ -30,24 +36,25 @@ namespace Eshop.Application.Service.Implementations
     public async Task RegisterOrLoginUser(RegisterUserDTO dto)
     {
       var checkUser = await CheckUserExistsMobile(dto.MobileNumber);
+      //Login user
       if (checkUser)
       {
         var user = await _userRepository.GetQuery().FirstAsync(u => u.MobileNumber == dto.MobileNumber);
         user.MobileActivationNumber = new Random().Next(10000, 99999).ToString();
         _userRepository.UpdateEntity(user);
+        await _userRepository.SaveChangesAsync();
+        await _smsService.SendVerificationSms(dto.MobileNumber, user.MobileActivationNumber);
+      }
 
-        await _userRepository.SaveChangesAsync();
-      }
-      else
+      //register new user
+      var newUser = new User
       {
-        var newUser = new User
-        {
-          MobileNumber = dto.MobileNumber,
-          MobileActivationNumber = new Random().Next(10000, 99999).ToString()
-        };
-        await _userRepository.AddEntity(newUser);
-        await _userRepository.SaveChangesAsync();
-      }
+        MobileNumber = dto.MobileNumber,
+        MobileActivationNumber = new Random().Next(10000, 99999).ToString()
+      };
+      await _userRepository.AddEntity(newUser);
+      await _userRepository.SaveChangesAsync();
+      await _smsService.SendVerificationSms(dto.MobileNumber, newUser.MobileActivationNumber);
     }
 
     public async Task<bool> CheckUserExistsMobile(string mobile)
@@ -57,7 +64,14 @@ namespace Eshop.Application.Service.Implementations
 
     public async Task<EditUserInfoDTO> GetEditUserInfo(long userId)
     {
-      throw new NotImplementedException();
+      var user = await _userRepository.GetByIdAsync(userId);
+      return new EditUserInfoDTO
+      {
+        Address = user.Address,
+        Email = user.Email,
+        FullName = user.FullName,
+        PostCode = user.PostCode,
+      };
     }
 
     public async Task EditUserDetails(EditUserInfoDTO dto)
@@ -72,7 +86,13 @@ namespace Eshop.Application.Service.Implementations
 
     public async Task<bool> SendActivationSms(string mobile)
     {
-      throw new NotImplementedException();
+      var user = await _userRepository.GetQuery().FirstOrDefaultAsync(u => u.MobileNumber == mobile);
+      if (user == null) return false;
+      
+      user.MobileActivationNumber = new Random().Next(10000, 99999).ToString();
+      await _smsService.SendVerificationSms(mobile, user.MobileActivationNumber);
+
+      return true;
     }
 
     #endregion
