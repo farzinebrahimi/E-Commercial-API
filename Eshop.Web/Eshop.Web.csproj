@@ -21,4 +21,12 @@
       <ProjectReference Include="..\Eshop.Data\Eshop.Data.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\Site\css\" />
+      <Folder Include="wwwroot\Site\fonts\" />
+      <Folder Include="wwwroot\Site\image\" />
+      <Folder Include="wwwroot\Site\js\" />
+      <Folder Include="wwwroot\Site\plugin\" />
+    </ItemGroup>
+
 </Project>
