@@ -2,5 +2,5 @@
 
 public interface ISmsService
 {
-  Task SendVerification(string mobile, string code);
+  Task SendVerificationSms(string mobile, string code);
 }
