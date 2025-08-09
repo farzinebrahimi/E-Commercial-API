@@ -12,3 +12,9 @@ public class MobileActivationDTO
     
     public string? ReturnUrl { get; set; }
 }
+
+public enum ActivationStatus
+{
+    Success,
+    Error
+}

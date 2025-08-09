@@ -12,3 +12,9 @@ public class LoginDTO
 
     public string? ReturnUrl { get; set; }
 }
+
+public enum LoginStatus
+{
+    Success,
+    UserNotFound
+}
