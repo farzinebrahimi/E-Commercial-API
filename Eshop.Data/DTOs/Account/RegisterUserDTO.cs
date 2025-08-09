@@ -9,9 +9,11 @@ public class RegisterUserDTO
     [MaxLength(11, ErrorMessage = "Max length 11")]
     [MinLength(11, ErrorMessage = "نمی تواند کمتر از {۱} کاراکتر باشد {۰}")]
     public string MobileNumber { get; set; }
+    
+    public string? ReturnUrl { get; set; }
 }
 
-public enum RegisterStatus
+public enum RegisterOrLoginStatus
 {
     Susccess,
     MobileInUse

@@ -1,6 +1,17 @@
-﻿namespace Eshop.Application.Service.Interfaces;
+﻿using Eshop.Data.DTOs.Account;
 
-public interface IUserService
+namespace Eshop.Application.Service.Interfaces;
+
+public interface IUserService : IAsyncDisposable
 {
+    #region Register & Login
+
+    Task<RegisterOrLoginStatus> RegisterOrLoginUser(RegisterUserDTO dto);
+    Task<bool> CheckUserExistsMobile(string mobile);
+    Task<EditUserInfoDTO> GetEditUserInfo(long userId);
     
+    Task EditUserDetails(EditUserInfoDTO dto);
+    Task<UserDetailDTO> GetUserDetails(long userId);
+    Task<bool> SendActivationSms(string mobile);
+    #endregion
 }
