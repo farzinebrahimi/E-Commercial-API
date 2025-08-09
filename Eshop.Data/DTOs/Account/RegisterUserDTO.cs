@@ -16,5 +16,5 @@ public class RegisterUserDTO
 public enum RegisterOrLoginStatus
 {
     Susccess,
-    MobileInUse
+    RedirectToSendActivationNumber,
 }
